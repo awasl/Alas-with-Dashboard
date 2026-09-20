@@ -575,5 +575,22 @@ class GeneratedConfig:
     # Group `GameManager`
     GameManager_AutoRestart = True
 
+    # Group `GGHandler`
+    GGHandler_Enabled = False
+    GGHandler_GGMethod = 'u2'  # u2
+    GGHandler_RestartATX = False
+    GGHandler_GGPackageName = 'com.'
+    GGHandler_AutoRestartGG = False
+    GGHandler_RestartEverytime = True
+    GGHandler_RepushLua = True
+    GGHandler_GGMultiplyingFactor = 200
+    GGHandler_Timeout = 120
+    GGHandler_DisabledTask = 'disable_all_dangerous_task'  # disable_all_dangerous_task, disable_guild_and_dangerous, disable_meta_and_exercise, disable_exercise, enable_all
+
+    # Group `PowerLimit`
+    PowerLimit_Exercise = 16500
+    PowerLimit_Raid = 16500
+    PowerLimit_Ash = 16500
+
     # Group `Storage`
     Storage_Storage = {}

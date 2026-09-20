@@ -307,8 +307,8 @@
       "help": ""
     },
     "GameManager": {
-      "name": "Game Manager(WIP)",
-      "help": ""
+      "name": "Game Manager",
+      "help": "Force-stop the game, auto login, and GG multiplier management"
     }
   },
   "Oil": {
@@ -3191,11 +3191,81 @@
   "GameManager": {
     "_info": {
       "name": "Game Manager",
-      "help": "This is a semi-finished product, currently only implemented to force close the game and start it after closing."
+      "help": "Force-stop the game, auto login, and GG multiplier management"
     },
     "AutoRestart": {
       "name": "Automatic Login",
-      "help": "Log back into the game when the game has been ended."
+      "help": "Log back into the game after it is force-stopped"
+    }
+  },
+  "GGHandler": {
+    "_info": {
+      "name": "GG Manager",
+      "help": ""
+    },
+    "Enabled": {
+      "name": "Enable",
+      "help": "Enable this if GameGuardian is installed so restart can skip GG error dialogs.\nOnly the bundled lua is used and it is pushed to /sdcard/Notes/Multiplier.lua.\nMultiplier is auto-disabled during Exercise, Raid and META."
+    },
+    "GGMethod": {
+      "name": "GG Control Method",
+      "help": "UiAutomator2 is recommended.\nScreenshot mode is no longer supported.\nSome emulators (e.g. BlueStacks, redfinger, VMOS) may fail.",
+      "u2": "UiAutomator2"
+    },
+    "RestartATX": {
+      "name": "Restart ATX and U2",
+      "help": "Restart ATX and UiAutomator2 when restarting the game. Keep this off by default. Enable it on LDPlayer if ATX drops."
+    },
+    "GGPackageName": {
+      "name": "GG Package Name",
+      "help": "Check /Android/data after installing GG. It should look like com.xxxxxxxx"
+    },
+    "AutoRestartGG": {
+      "name": "Enable Multiplier",
+      "help": "Master switch. Multiplier mode is used only when this is on"
+    },
+    "RestartEverytime": {
+      "name": "Restart when Alas starts",
+      "help": "Restart the game on Alas start to reset multiplier state"
+    },
+    "RepushLua": {
+      "name": "Re-push Lua",
+      "help": "Toggle this if pushing Multiplier.lua fails"
+    },
+    "GGMultiplyingFactor": {
+      "name": "Multiplier",
+      "help": "Recommended 1-9999. There is no validation"
+    },
+    "Timeout": {
+      "name": "Startup timeout (sec)",
+      "help": "Timeout for starting GG. Increase it on slow devices"
+    },
+    "DisabledTask": {
+      "name": "Disable multiplier for",
+      "help": "Tasks that must run with multiplier off. Keep dangerous tasks disabled unless you accept the risk.",
+      "disable_all_dangerous_task": "Disable dangerous tasks",
+      "disable_guild_and_dangerous": "Disable guild and dangerous tasks",
+      "disable_meta_and_exercise": "Disable META and exercise",
+      "disable_exercise": "Disable exercise",
+      "enable_all": "Enable all"
+    }
+  },
+  "PowerLimit": {
+    "_info": {
+      "name": "Power Limit",
+      "help": "Last safety check before dangerous tasks.\nIf front-row power is above this value, Alas restarts and treats GG as required."
+    },
+    "Exercise": {
+      "name": "Exercise",
+      "help": ""
+    },
+    "Raid": {
+      "name": "Raid",
+      "help": ""
+    },
+    "Ash": {
+      "name": "META Beacon",
+      "help": ""
     }
   },
   "Storage": {

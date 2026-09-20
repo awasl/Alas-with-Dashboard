@@ -307,8 +307,8 @@
       "help": ""
     },
     "GameManager": {
-      "name": "Game Manager(WIP)",
-      "help": ""
+      "name": "ゲームマネージャー",
+      "help": "ゲーム強制終了、自動ログイン、GG倍率管理"
     }
   },
   "Oil": {
@@ -3190,12 +3190,82 @@
   },
   "GameManager": {
     "_info": {
-      "name": "GameManager._info.name",
-      "help": "GameManager._info.help"
+      "name": "ゲーム管理",
+      "help": "ゲーム強制終了、自動ログイン、GG倍率管理"
     },
     "AutoRestart": {
-      "name": "GameManager.AutoRestart.name",
-      "help": "GameManager.AutoRestart.help"
+      "name": "自動ログイン",
+      "help": "ゲームを強制終了した後に自動でログインします"
+    }
+  },
+  "GGHandler": {
+    "_info": {
+      "name": "GGマネージャー",
+      "help": ""
+    },
+    "Enabled": {
+      "name": "この機能を有効化",
+      "help": "GGを使用する場合は有効にしてください。再起動時のGGエラー画面を回避します。\n指定のluaのみ使用し、/sdcard/Notes/Multiplier.lua へ自動転送します。\n演習・共闘・METAでは倍率を自動でオフにします。"
+    },
+    "GGMethod": {
+      "name": "GG操作方法",
+      "help": "UiAutomator2 を推奨します。スクリーンショット方式は非対応です。",
+      "u2": "UiAutomator2"
+    },
+    "RestartATX": {
+      "name": "ATXとU2を再起動",
+      "help": "ゲーム再起動時にATXとU2も再起動します。通常はオフのままにしてください。"
+    },
+    "GGPackageName": {
+      "name": "GGパッケージ名",
+      "help": "GG導入後、/Android/data でパッケージ名を確認してください。com. から始まる文字列です。"
+    },
+    "AutoRestartGG": {
+      "name": "倍率を有効化",
+      "help": "マスタースイッチ。オンのときだけ倍率を使います"
+    },
+    "RestartEverytime": {
+      "name": "Alas起動時に再起動",
+      "help": "Alas起動時にゲームを再起動して倍率状態を初期化します"
+    },
+    "RepushLua": {
+      "name": "Luaを再転送",
+      "help": "lua転送に失敗した場合に切り替えてみてください"
+    },
+    "GGMultiplyingFactor": {
+      "name": "倍率",
+      "help": "推奨値は 1-9999 です。数値チェックはありません"
+    },
+    "Timeout": {
+      "name": "起動制限時間(秒)",
+      "help": "GG起動のタイムアウト。端末が遅い場合は大きくしてください"
+    },
+    "DisabledTask": {
+      "name": "倍率を無効にする任務",
+      "help": "倍率を切る任務です。危険な任務は無効のまま推奨します。",
+      "disable_all_dangerous_task": "危険な任務を無効",
+      "disable_guild_and_dangerous": "大艦隊と危険な任務を無効",
+      "disable_meta_and_exercise": "METAと演習を無効",
+      "disable_exercise": "演習を無効",
+      "enable_all": "制限なし"
+    }
+  },
+  "PowerLimit": {
+    "_info": {
+      "name": "戦力制限",
+      "help": "危険任務の直前の安全装置です。前衛戦力がこの値を超えると再起動します。"
+    },
+    "Exercise": {
+      "name": "演習",
+      "help": ""
+    },
+    "Raid": {
+      "name": "共闘",
+      "help": ""
+    },
+    "Ash": {
+      "name": "余燼",
+      "help": ""
     }
   },
   "Storage": {

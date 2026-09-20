@@ -172,15 +172,22 @@ class ConfigGenerator:
         """
         # Construct args
         data = {}
-        # Add dashboard to args
-        dashboard_and_task = {**self.dashboard,**self.task}
-        for path, groups in deep_iter(dashboard_and_task, depth=3):
-            if 'tasks' not in path and 'Dashboard' not in path:
+        for path, groups in deep_iter(self.task, depth=3):
+            if 'tasks' not in path:
                 continue
-            task = path[2] if 'tasks' in path else path[0]
+            task = path[2]
             # Add storage to all task
             groups.append('Storage')
             for group in groups:
+                if group not in self.argument:
+                    print(f'`{task}.{group}` is not related to any argument group')
+                    continue
+                deep_set(data, keys=[task, group], value=deepcopy(self.argument[group]))
+        # dashboard.yaml is a depth-1 mapping: {Dashboard: [Oil, Coin, ...]}
+        # deep_iter(task, depth=3) cannot see it, so add dashboard groups explicitly.
+        for task, groups in self.dashboard.items():
+            extra_groups = list(groups) + ['Storage']
+            for group in extra_groups:
                 if group not in self.argument:
                     print(f'`{task}.{group}` is not related to any argument group')
                     continue

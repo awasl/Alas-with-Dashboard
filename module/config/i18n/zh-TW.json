@@ -307,8 +307,8 @@
       "help": ""
     },
     "GameManager": {
-      "name": "遊戲管理器(未完成)",
-      "help": ""
+      "name": "遊戲管理器",
+      "help": "強制關閉遊戲、自動登入，以及 GG 倍率管理"
     }
   },
   "Oil": {
@@ -3191,11 +3191,81 @@
   "GameManager": {
     "_info": {
       "name": "遊戲管理",
-      "help": "半成品，僅實現了強制關閉遊戲，自動登錄"
+      "help": "強制關閉遊戲、自動登入，以及 GG 倍率管理"
     },
     "AutoRestart": {
-      "name": "自動登錄",
-      "help": "遊戲被強制結束後自動登錄遊戲"
+      "name": "自動登入",
+      "help": "遊戲被強制結束後自動登入遊戲"
+    }
+  },
+  "GGHandler": {
+    "_info": {
+      "name": "GG管理器",
+      "help": ""
+    },
+    "Enabled": {
+      "name": "啟用該功能",
+      "help": "注意事項！若GG打開則應該啟用該功能以達成防彈窗卡重啟\n只能使用指定的lua，會自動推送至/sdcard/Notes/Multiplier.lua\n演習，共鬥，Meta信標時會自動關閉倍率"
+    },
+    "GGMethod": {
+      "name": "GG操作方法",
+      "help": "推薦UiAutomator2\n截圖由於公版更新已經不再可用\n紅手指，vmos環境，以及藍疊模擬器有機率無法使用。",
+      "u2": "UiAutomator2"
+    },
+    "RestartATX": {
+      "name": "重啟ATX和U2",
+      "help": "重啟遊戲時重啟ATX和U2。預設關閉。藍疊和紅手指等環境重啟會報錯。雷電易丟ATX服務，需要打開。"
+    },
+    "GGPackageName": {
+      "name": "GG包名",
+      "help": "GG安裝後請自行前往/Android/Data資料夾查看包名，應是com.一串亂碼"
+    },
+    "AutoRestartGG": {
+      "name": "啟用倍率",
+      "help": "總開關，打開後才會開啟倍率模式"
+    },
+    "RestartEverytime": {
+      "name": "每次啟動Alas時重啟",
+      "help": "打開以初始化倍率屬性。如果你沒有手動操作的壞習慣，可以關閉此選項。"
+    },
+    "RepushLua": {
+      "name": "重新推送Lua",
+      "help": "有時推送時會失敗，若出現此情況可嘗試開關此選項。"
+    },
+    "GGMultiplyingFactor": {
+      "name": "倍率",
+      "help": "建議數值1-9999，沒做數字檢查，亂輸後果自負"
+    },
+    "Timeout": {
+      "name": "啟動時限(秒)",
+      "help": "啟動GG的時間限制，若裝置運行慢則需要適當調大"
+    },
+    "DisabledTask": {
+      "name": "禁用倍率的項目",
+      "help": "會關閉倍率的項目，建議敏感項目全關。打開的項目導致封號後果自負。",
+      "disable_all_dangerous_task": "禁用敏感項目",
+      "disable_guild_and_dangerous": "禁用大艦隊，以及敏感項目",
+      "disable_meta_and_exercise": "禁用META以及演習",
+      "disable_exercise": "禁用演習",
+      "enable_all": "百無禁忌"
+    }
+  },
+  "PowerLimit": {
+    "_info": {
+      "name": "戰力限制",
+      "help": "敏感項目前的最後一道保險\n若前排戰力高於此值強制重啟，並視為需要使用GG"
+    },
+    "Exercise": {
+      "name": "演習",
+      "help": ""
+    },
+    "Raid": {
+      "name": "共鬥",
+      "help": ""
+    },
+    "Ash": {
+      "name": "餘燼信標",
+      "help": ""
     }
   },
   "Storage": {
