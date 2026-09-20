@@ -7,6 +7,7 @@ config/*.yaml
 !config/deploy.*.yaml
 config/*.json
 config/tmp*
+config/gg_handler/
 !config/template*.json
 *.pyw
 dev_tools/debug_tools

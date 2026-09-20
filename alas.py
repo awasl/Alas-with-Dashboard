@@ -13,6 +13,7 @@ from module.config.deep import deep_get, deep_set
 from module.exception import *
 from module.logger import logger
 from module.notify import handle_notify
+from module.gg_handler.gg_handler import GGHandler
 
 
 class AzurLaneAutoScript:
@@ -546,10 +547,24 @@ class AzurLaneAutoScript:
         AzurLaneConfig.is_hoarding_task = False
         return task.command
 
+    def gg_check(self):
+        if deep_get(self.config.data, 'GameManager.GGHandler.Enabled'):
+            logger.info('GG is enabled, check gg package name')
+            if deep_get(self.config.data, 'GameManager.GGHandler.GGPackageName') in self.device.list_package():
+                logger.info('GG package name exists')
+            else:
+                logger.critical("GG package name doesn't exist, please check your gg setting")
+                logger.critical('友情翻译：你他妈的GG包名填错了，滚去重填！！！')
+                exit(1)
+
     def loop(self):
+        self.gg_check()
         logger.set_file_logger(self.config_name)
         logger.info(f'Start scheduler loop: {self.config_name}')
-
+        # Try forced task_call restart to reset GG status
+        self.checker.wait_until_available()
+        GGHandler(config=self.config, device=self.device).handle_restart_before_tasks()
+        check_fail = 0
         while 1:
             # Check update event from GUI
             if self.stop_event is not None:
@@ -573,11 +588,29 @@ class AzurLaneAutoScript:
             _ = self.device
             self.device.config = self.config
             # Skip first restart
-            if self.is_first_task and task == 'Restart':
-                logger.info('Skip task `Restart` at scheduler start')
+            if task == 'Restart':
+                if self.is_first_task:
+                    logger.info('Skip task `Restart` at scheduler start')
+                else:
+                    from module.handler.login import LoginHandler
+                    LoginHandler(self.config, self.device).app_restart()
                 self.config.task_delay(server_update=True)
                 del_cached_property(self, 'config')
                 continue
+
+            # Check GG config before a task begins (to reset temporary config), and decide to enable it.
+            GGHandler(config=self.config, device=self.device).check_config()
+            try:
+                GGHandler(config=self.config, device=self.device).check_then_set_gg_status(inflection.underscore(task))
+                check_fail = 0
+            except GameStuckError:
+                del_cached_property(self, 'config')
+                check_fail += 1
+                if check_fail <= 3:
+                    continue
+                else:
+                    logger.critical('Maybe your emulator died, trying to restart it')
+                    self.device.emulator_start()
 
             # Run
             logger.info(f'Scheduler: Start task `{task}`')
