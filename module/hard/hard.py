@@ -45,6 +45,9 @@ class CampaignHard(CampaignRun):
         logger.attr('Remain', remain)
         for n in range(remain):
             self.campaign.run()
+            if self.campaign.config.modified:
+                logger.info('Updating config for dashboard')
+                self.campaign.config.update()
 
         self.campaign.ensure_auto_search_exit()
         # self.campaign.equipment_take_off_when_finished()
