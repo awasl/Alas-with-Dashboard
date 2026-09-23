@@ -93,7 +93,7 @@ class GitManager(DeployConfig):
         self.execute(f'"{self.git}" fetch {source} {branch}')
         Progress.GitFetch()
 
-        logger.hr('Pull Repository Branch', 1)
+        logger.hr('Fast-forward Repository Branch', 1)
         # Remove git lock
         for lock_file in [
             './.git/index.lock',
@@ -103,11 +103,19 @@ class GitManager(DeployConfig):
             if os.path.exists(lock_file):
                 logger.info(f'Lock file {lock_file} exists, removing')
                 os.remove(lock_file)
-        self.execute(f'"{self.git}" reset --hard {source}/{branch}')
+
+        remote_branch = f'{source}/{branch}'
+        if self.execute(f'"{self.git}" rev-parse --verify HEAD', allow_failure=True):
+            # Never discard local changes or commits during an automatic update.
+            self.execute(f'"{self.git}" diff --quiet')
+            self.execute(f'"{self.git}" diff --cached --quiet')
+            self.execute(f'"{self.git}" checkout {branch}')
+            self.execute(f'"{self.git}" merge-base --is-ancestor HEAD {remote_branch}')
+            self.execute(f'"{self.git}" merge --ff-only {remote_branch}')
+        else:
+            # A freshly initialized repository has no HEAD yet.
+            self.execute(f'"{self.git}" checkout -B {branch} {remote_branch}')
         Progress.GitReset()
-        # Since `git fetch` is already called, checkout is faster
-        if not self.execute(f'"{self.git}" checkout {branch}', allow_failure=True):
-            self.execute(f'"{self.git}" pull --ff-only {source} {branch}')
         Progress.GitCheckout()
 
         logger.hr('Show Version', 1)
