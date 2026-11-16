@@ -6,7 +6,9 @@ import module.config.server as server
 from module.base.button import ButtonGrid
 from module.base.decorator import cached_property, del_cached_property
 from module.island.data import DIC_ISLAND_SHOP, DIC_ISLAND_SHOP_ITEM_TO_RECIPE, DIC_ISLAND_SHOP_RECIPE
-from module.island.utils import item_name_with_id
+from module.island.utils import (
+    get_configured_season, get_shop_recipe_data, is_shop_recipe_available, item_name_with_id,
+)
 from module.island_handler.assets import *
 from module.island_handler.shop_ui import IslandShopUI
 from module.logger import logger
@@ -177,29 +179,24 @@ class IslandShop(IslandShopUI):
             return {}
 
     def island_shop_buy_ensure_amount(self, amount):
-        # having button of -10, -1, +1, +10, and the amount to buy, we can ensure the amount to buy by clicking these buttons
-        # try using least number of clicks
-        def middle_integer(N):
-            d = N - 1
-            q = d // 10
-            r = d % 10
-            if r <= 5:
-                middle = 10*q + 1
-            else:
-                middle = 10*(q + 1) + 1
-            return middle
-
+        """Select the exact amount, allowing ten-step clicks to hit the shop's limit."""
         if server.server in ['cn', 'tw']:
             lang = 'cnocr'
         else:
             lang = 'azur_lane'
         ocr = Digit([ISLAND_SHOP_BUY_AMOUNT], lang=lang, letter=(57, 58, 60), threshold=160, name="island_shop_buy_amount_ocr")
-        def one_tenth_ocr(image):
-            amount = ocr.ocr(image)
-            return amount // 10
 
-        self.ui_ensure_index(middle_integer(amount) // 10, one_tenth_ocr, ISLAND_SHOP_BUY_AMOUNT_PLUS_TEN, ISLAND_SHOP_BUY_AMOUNT_MINUS_TEN)
-        self.ui_ensure_index(amount, ocr, ISLAND_SHOP_BUY_AMOUNT_PLUS_ONE, ISLAND_SHOP_BUY_AMOUNT_MINUS_ONE)
+        def ten_step_index(image):
+            # Round the actual remaining distance to ten-step clicks, then finish
+            # with single steps. Clamping at either limit can shorten this phase.
+            diff = ocr.ocr(image) - amount
+            count = (abs(diff) + 4) // 10
+            return count if diff > 0 else -count
+
+        self.ui_ensure_index(0, ten_step_index,
+                             ISLAND_SHOP_BUY_AMOUNT_PLUS_TEN, ISLAND_SHOP_BUY_AMOUNT_MINUS_TEN)
+        self.ui_ensure_index(amount, ocr,
+                             ISLAND_SHOP_BUY_AMOUNT_PLUS_ONE, ISLAND_SHOP_BUY_AMOUNT_MINUS_ONE)
 
     def island_shop_buy_execute(self, button, amount):
         for _ in self.loop():
@@ -219,9 +216,14 @@ class IslandShop(IslandShopUI):
                 break
 
     def island_shop_buy_in_page(self, recipe_id, amount=1):
-        currency_id = list(DIC_ISLAND_SHOP_RECIPE[recipe_id]['resource_consume'].keys())[0]
+        season = get_configured_season(self.config)
+        if not is_shop_recipe_available(recipe_id, season):
+            logger.warning(f'Shop recipe {recipe_id} is inactive this season')
+            return False
+        recipe = get_shop_recipe_data(recipe_id)
+        currency_id = list(recipe['resource_consume'].keys())[0]
         currency_amount = self.island_shop_get_currency().get(currency_id, 0)
-        required = DIC_ISLAND_SHOP_RECIPE[recipe_id]['resource_consume'][currency_id] * amount
+        required = recipe['resource_consume'][currency_id] * amount
         # Items paid as currency, e.g. wheat for flour, keep their protected stock
         protected = self.get_protected_items([currency_id]).get(currency_id, 0) if currency_id != 1 else 0
         logger.info(
@@ -310,6 +312,7 @@ class IslandShop(IslandShopUI):
                             notice that the behaviour of multiple items to buy and isolated=True is undefined.
         """
         self.wait_island_shop_loading()
+        season = get_configured_season(self.config)
         success = True
         for item_id, amount in shopping_dict.items():
             if item_id not in DIC_ISLAND_SHOP_ITEM_TO_RECIPE:
@@ -319,7 +322,11 @@ class IslandShop(IslandShopUI):
             if recipe_id not in DIC_ISLAND_SHOP_RECIPE:
                 logger.warning(f"Recipe {recipe_id} not found in data, cannot buy")
                 continue
-            buy_count = (amount - 1) // DIC_ISLAND_SHOP_RECIPE[recipe_id]['items'][item_id] + 1
+            if not is_shop_recipe_available(recipe_id, season):
+                logger.warning(f'Shop recipe {recipe_id} is inactive this season')
+                success = False
+                continue
+            buy_count = (amount - 1) // get_shop_recipe_data(recipe_id)['items'][item_id] + 1
             logger.info(
                 f'Buying {amount} of {item_name_with_id(item_id)} requires '
                 f'{shop_recipe_name_with_id(recipe_id)} with buy count {buy_count}'

@@ -256,30 +256,38 @@
     },
     "OpsiCrossMonth": {
       "name": "Cross Month Daily",
-      "help": "    ALAS will enter OpSi 10min before OpSi reset, wait until OpSi reset but not exit OpSi. Then do the daily, obscure, abyssal and meowfficer farming to get extra gold plates. When running dailies, settings in task \"OpSiDaily\" are used, the rest function are the same.\n    IMPORTANT: Please do not touch the game while ALAS is waiting for OpSi reset."
+      "help": "ALAS will enter OpSi 10min before OpSi reset, wait until OpSi reset but not exit OpSi. Then do the daily, obscure, abyssal and meowfficer farming to get extra gold plates. When running dailies, settings in task \"OpSiDaily\" are used, the rest function are the same.\nIMPORTANT: Please do not touch the game while ALAS is waiting for OpSi reset."
+    },
+    "IslandGeneral": {
+      "name": "Island Settings",
+      "help": ""
     },
     "IslandProduction": {
       "name": "Island Production",
-      "help": "Users need to config Island Business' restaurant level and waitress, then config and run Tools - Island Production Planner to generate the production plan.\nAfter that the Island Production will run normally.\nTutorial: https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/Island-Planner-Auto-Farming-&-Configure"
+      "help": "Configure restaurant grades and staff under Store Management, then configure and run Tools > Island Production Planner. Run Island Production after the planner has generated a plan.\nTutorial: https://github.com/LmeSzinc/AzurLaneAutoScript/wiki/Island-Planner-Auto-Farming-&-Configure"
     },
     "IslandOrder": {
       "name": "Island Request",
       "help": ""
     },
+    "IslandTransport": {
+      "name": "Transport Job",
+      "help": "Claim rewards from completed Transport Jobs, then complete the jobs with the best value for the production plan, replacing them with better jobs from the list when appropriate.\nJob values come from the production plan; run Tools > Island Production Planner first."
+    },
     "IslandFreebie": {
-      "name": "Daily Supplies",
+      "name": "Daily Supply",
       "help": ""
     },
     "IslandCollect": {
-      "name": "Daily Gathering",
-      "help": "Use management panel to gather season specialities and coal/wood.\nWill use multiple characters with least levels until stamina requirement is fulfilled."
+      "name": "Resource Gathering",
+      "help": "Use Gathering in Manage All to collect seasonal specialties, Coal, and Raw Timber.\nAssign available characters with sufficient Stamina for gathering."
     },
     "IslandSeasonTask": {
-      "name": "Island Season Task",
+      "name": "Development Plan",
       "help": ""
     },
     "IslandBusiness": {
-      "name": "Restaurant Management",
+      "name": "Store Management",
       "help": ""
     },
     "Daemon": {
@@ -296,7 +304,7 @@
     },
     "IslandProductionPlanner": {
       "name": "Island Production Planner",
-      "help": "Planner for optimizing island production plan to earn pt subject to given daily profit.\nWill export bootstrap inventory stock quantities and accumulating item quantities to config after running, which can be used for production planning in the future without scanning technology again.\nNote: The production plan is optimized based on the technology status at the time of scanning, if there are changes in technology status, it is recommended to run the planner again to get an updated production plan."
+      "help": "Use linear programming to optimize the island production plan from your settings and generate the configuration for Island Production."
     },
     "Benchmark": {
       "name": "Performance Test",
@@ -686,7 +694,7 @@
       "name": "Screenshot Method",
       "help": "When using auto-select, a benchmark will be performed and automatically changed to the fastest screenshot method.\nGeneral speed: DroidCast_raw >> aScreenCap_nc > ADB_nc >>> aScreenCap > uiautomator2 ~= ADB.\nRun Tools - Performance Test to find the fastest method.",
       "auto": "Auto-select the fastest",
-      "ADB": "ADB ",
+      "ADB": "ADB",
       "ADB_nc": "ADB_nc",
       "uiautomator2": "uiautomator2",
       "aScreenCap": "aScreenCap",
@@ -762,7 +770,7 @@
     },
     "OnePushConfig": {
       "name": "Error notify config",
-      "help": "When Alas cannot handle exception, send a message through Onepush. Configuration document: \nhttps://github.com/LmeSzinc/AzurLaneAutoScript/wiki/Onepush-configuration-%5BEN%5D"
+      "help": "When Alas cannot handle exception, send a message through Onepush. Configuration document:\nhttps://github.com/LmeSzinc/AzurLaneAutoScript/wiki/Onepush-configuration-%5BEN%5D"
     },
     "ScreenshotLength": {
       "name": "Record Screenshot(s)",
@@ -1096,6 +1104,7 @@
       "war_archives_20230223_cn": "archives Revelations of Dust",
       "war_archives_20230525_cn": "archives Confluence of Nothingness",
       "war_archives_20230803_cn": "archives Anthem of Remembrance",
+      "war_archives_20230817_cn": "archives The Fools Scales",
       "war_archives_20231026_cn": "archives Tempesta and the Fountain of Youth",
       "war_archives_20240725_cn": "archives Interlude of Illusions",
       "war_archives_20241024_cn": "archives Tempesta and the Sleeping Sea",
@@ -1389,7 +1398,7 @@
   },
   "EnemyPriority": {
     "_info": {
-      "name": "Enemy Priority ",
+      "name": "Enemy Priority",
       "help": "Customize the priority of the enemy you want to fight"
     },
     "EnemyScaleBalanceWeight": {
@@ -2352,7 +2361,7 @@
     },
     "ClaimMaintenance": {
       "name": "Claim Maintenance Mails",
-      "help": "Mail.ClaimMaintenance.help"
+      "help": ""
     },
     "ClaimTradeLicense": {
       "name": "Claim Trade License Mails",
@@ -2877,6 +2886,21 @@
       "22": "22 | NA Ocean SW Sector B"
     }
   },
+  "IslandGeneral": {
+    "_info": {
+      "name": "Island Settings",
+      "help": ""
+    },
+    "Season": {
+      "name": "Development Season",
+      "help": "The latest development season for your server is selected automatically. All island tasks and the production planner share this setting.",
+      "season_20260806_cn": "Island Planner Season IV - Tales from Autumn",
+      "season_20261105_cn": "Island Planner Season V – Winter Wanderlust",
+      "season_20260507_cn": "Development Season Ⅲ – Summer Sojourn",
+      "season_20260205_cn": "Development Season II - Spring Merrymaking",
+      "season_20251106_cn": "Development Season I - Lets Get Started!"
+    }
+  },
   "IslandProduction": {
     "_info": {
       "name": "Island Production",
@@ -2901,12 +2925,16 @@
     "SkipBufferSurplus": {
       "name": "Skip Buffer-Surplus Production",
       "help": "Skip buffer-surplus eligibility checks and proceed directly to idle-accumulating production. When disabled, buffer-surplus is tried first; idle accumulation is still used if that attempt fails."
+    },
+    "UseWorkerjuuByDefault": {
+      "name": "Use Workerjuu by default",
+      "help": "Enabled: use Workerjuu by default. Disabled: search available characters in ascending dock order with at least 100 Stamina and a Stamina cap below 150, excluding named staff configured under Store Management; use Workerjuu if none is available."
     }
   },
   "IslandOrder": {
     "_info": {
       "name": "Island Request",
-      "help": "Normal requests preserve soft floors and manual hard floors.\nUrgent and season requests may consume soft floors and hard floors.\nSeason requests are treated as priority requests and may consume all stock."
+      "help": "Regular Requests normally preserve manual Hard Floor Items and restaurant menu reserves.\nUrgent and seasonal requests may use all stock. During the last two hours before the daily server reset, Regular Requests may also use these reserves."
     },
     "StuckSeasonOrderId": {
       "name": "Unfulfilled Season Request ID",
@@ -2915,7 +2943,7 @@
   },
   "IslandFreebie": {
     "_info": {
-      "name": "Daily Supplies",
+      "name": "Daily Supply",
       "help": ""
     },
     "Share": {
@@ -2925,7 +2953,7 @@
   },
   "IslandRestaurant": {
     "_info": {
-      "name": "Restaurant Management",
+      "name": "Store Management",
       "help": ""
     },
     "KoiGrade": {
@@ -3077,7 +3105,7 @@
   },
   "IslandSeasonTask": {
     "_info": {
-      "name": "Island Season Task",
+      "name": "Development Plan",
       "help": ""
     },
     "TaskTarget": {
@@ -3124,7 +3152,7 @@
   "IslandProductionPlanner": {
     "_info": {
       "name": "Island Production Planner",
-      "help": "Will use linear programming to optimize the production plan for the island based on the parameters you set and generate the config for Island Production module.\nPlease set Island Restaurant config and Island Production Preserved Items first.\nClear Task status to rerun Island Technology Scanner."
+      "help": "Use linear programming to optimize the island production plan from your settings and generate the configuration for Island Production.\nFirst configure restaurant grades and staff under Store Management and stock requirements under Island Production.\nAfter Tech Research changes, enable Rescan Island Technology this time and run the planner."
     },
     "RescanIslandTechnology": {
       "name": "Rescan Island Technology this time",
