@@ -4,6 +4,7 @@ from module.base.utils import rgb2gray
 from module.campaign.campaign_ui import CampaignUI
 from module.combat.combat import Combat
 from module.eventstory.assets import *
+from module.gg_handler.gg_handler import GGHandler
 from module.handler.login import LoginHandler
 from module.logger import logger
 from module.ui.page import page_event, page_sp
@@ -218,6 +219,7 @@ class EventStoryBase(CampaignUI, Combat, LoginHandler):
                     self.config.override(Error_HandleError=True)
                     self.app_stop()
                     self.app_start()
+                    GGHandler(config=self.config, device=self.device).check_then_set_gg_status('event_story')
                     continue
                 else:
                     self.combat_execute()
@@ -261,9 +263,13 @@ class EventStoryBase(CampaignUI, Combat, LoginHandler):
             logger.info(f'Current event ({event}) does not have event story, stopped')
             return
 
+        # This tool runs outside the scheduler, so refresh GG config explicitly.
+        gg = GGHandler(config=self.config, device=self.device)
+        gg.check_config()
         if not self.device.app_is_running():
             logger.warning('Game is not running, start it')
             self.app_start()
+        gg.check_then_set_gg_status('event_story')
 
         self.run_event_story()
 

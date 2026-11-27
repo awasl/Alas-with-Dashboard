@@ -1,7 +1,7 @@
 """Regression checks for story battles and cross-task event settings."""
 
 from types import SimpleNamespace
-from unittest.mock import Mock, call
+from unittest.mock import Mock, call, patch
 
 from module.eventstory.eventstory_base import EventStoryBase
 
@@ -13,6 +13,7 @@ def make_story(allow_restart):
         allow_event_battle_kill_game=allow_restart,
         combat_expected_end=Mock(return_value=True),
         config=SimpleNamespace(override=Mock()),
+        device=SimpleNamespace(),
         app_stop=Mock(),
         app_start=Mock(),
     )
@@ -50,9 +51,13 @@ def test_story_battle_can_still_use_restart_shortcut():
     story.combat_execute = Mock()
     story.combat_status = Mock()
 
-    EventStoryBase.run_event_story(story)
+    with patch('module.eventstory.eventstory_base.GGHandler') as manager:
+        lifecycle.attach_mock(manager.return_value, 'gg')
+        EventStoryBase.run_event_story(story)
 
-    assert lifecycle.mock_calls == [call.stop(), call.start()]
+    assert lifecycle.mock_calls == [
+        call.stop(), call.start(), call.gg.check_then_set_gg_status('event_story'),
+    ]
     story.config.override.assert_called_once_with(Error_HandleError=True)
     story.combat_execute.assert_not_called()
     story.combat_status.assert_not_called()
@@ -82,3 +87,31 @@ def test_abyss_story_uses_event_task_settings():
 def test_story_restart_policy_uses_event_task_settings():
     assert make_configured_story('event_20260908_cn').allow_event_battle_kill_game is False
     assert make_configured_story('event_20250724_cn').allow_event_battle_kill_game is True
+
+
+def test_story_tool_checks_gg_after_starting_game():
+    for running in [False, True]:
+        lifecycle = Mock()
+        story = SimpleNamespace(
+            config=SimpleNamespace(cross_get=lambda *args: ''),
+            device=SimpleNamespace(app_is_running=lambda: running),
+            app_start=lifecycle.start,
+            run_event_story=lifecycle.story,
+        )
+        with patch('module.eventstory.eventstory_base.GGHandler') as manager:
+            lifecycle.attach_mock(manager.return_value, 'gg')
+            EventStoryBase.run(story)
+            manager.assert_called_once_with(config=story.config, device=story.device)
+
+        expected = [call.gg.check_config()]
+        if not running:
+            expected.append(call.start())
+        expected += [call.gg.check_then_set_gg_status('event_story'), call.story()]
+        assert lifecycle.mock_calls == expected
+
+
+def test_unavailable_story_does_not_start_gg():
+    story = SimpleNamespace(config=SimpleNamespace(cross_get=lambda *args: 'event_20260226_cn'))
+    with patch('module.eventstory.eventstory_base.GGHandler') as manager:
+        EventStoryBase.run(story)
+        manager.assert_not_called()
